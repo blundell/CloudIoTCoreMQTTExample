@@ -25,7 +25,8 @@ communicator = new IotCoreCommunicator.Builder()
         .withPrivateKeyRawFileId(R.raw.rsa_private)
         .build();
 communicator.connect();
-        ```
+```
+        
 and publish a message like this:
 
 ```

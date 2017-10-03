@@ -32,4 +32,11 @@ and publish a message like this:
 ```
 communicator.publishMessage("subtopic", "Hello World");
 ```
+
+finally when finished:
+
+```
+communicator.disconnect();
+```
+        
         

@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 
             String subtopic = "events";
             String message = "Hello World " + i++;
-            communicator.sendMessage(subtopic, message);
+            communicator.publishMessage(subtopic, message);
 
             handler.postDelayed(this, TimeUnit.SECONDS.toMillis(1));
         }

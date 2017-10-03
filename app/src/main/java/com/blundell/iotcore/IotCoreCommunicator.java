@@ -153,7 +153,7 @@ public class IotCoreCommunicator {
         }
     }
 
-    public void sendMessage(String subtopic, String message) {
+    public void publishMessage(String subtopic, String message) {
         String topic = "/devices/" + deviceId + "/" + subtopic;
         String payload = "{msg:\"" + message + "\"}";
         MqttMessage mqttMessage = new MqttMessage(payload.getBytes());

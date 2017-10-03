@@ -11,7 +11,7 @@ https://github.com/GoogleCloudPlatform/java-docs-samples/blob/master/iot/api-cli
 
 but written for AndroidThings instead of Java. Also tried to keep it simpler and separated. 
 
-See [MainActivity.java]() for use.
+See [MainActivity.java](https://github.com/blundell/CloudIoTCoreMQTTExample/blob/master/app/src/main/java/com/blundell/tut/MainActivity.java) for use.
 
 You connect like this
 

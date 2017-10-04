@@ -55,10 +55,10 @@ class IotCorePasswordGenerator {
     }
 
     private static String createJwtRsaPassword(String projectId, byte[] privateKeyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return createPassword(projectId, privateKeyBytes, SignatureAlgorithm.RS256); // for ES256 just change the enum
+        return createPassword(projectId, privateKeyBytes, "RSA", SignatureAlgorithm.RS256);
     }
 
-    private static String createPassword(String projectId, byte[] privateKeyBytes, SignatureAlgorithm signatureAlgorithm) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private static String createPassword(String projectId, byte[] privateKeyBytes, String algorithmName, SignatureAlgorithm signatureAlgorithm) throws NoSuchAlgorithmException, InvalidKeySpecException {
         LocalDateTime now = LocalDateTime.now();
         // Create a JWT to authenticate this device. The device will be disconnected after the token
         // expires, and will have to reconnect with a new token. The audience field should always be set
@@ -72,7 +72,7 @@ class IotCorePasswordGenerator {
                         .setAudience(projectId);
 
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(privateKeyBytes);
-        KeyFactory kf = KeyFactory.getInstance(signatureAlgorithm.getValue());
+        KeyFactory kf = KeyFactory.getInstance(algorithmName);
 
         return jwtBuilder.signWith(signatureAlgorithm, kf.generatePrivate(spec)).compact();
     }

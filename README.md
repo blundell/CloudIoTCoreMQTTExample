@@ -1,4 +1,4 @@
-# CloudIoTCoreMQTTExample
+# Cloud IoT Core MQTT Communication Example
 
 Found it hard to understand the docs here: https://cloud.google.com/iot/docs/how-tos/mqtt-bridge and no examples online, so wrote my own.
 
@@ -32,4 +32,11 @@ and publish a message like this:
 ```
 communicator.publishMessage("subtopic", "Hello World");
 ```
+
+finally when finished:
+
+```
+communicator.disconnect();
+```
+        
         

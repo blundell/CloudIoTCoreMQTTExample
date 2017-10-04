@@ -26,13 +26,21 @@ public class MainActivity extends Activity {
                 .withDeviceId("a-device-id") // ex: my-test-raspberry-pi
                 .withPrivateKeyRawFileId(R.raw.rsa_private)
                 .build();
-        communicator.connect();
 
         HandlerThread thread = new HandlerThread("MyBackgroundThread");
         thread.start();
         handler = new Handler(thread.getLooper());
-        handler.post(sendMqttMessage);
+        handler.post(connectOffTheMainThread); // Using whatever threading mechanism you want
     }
+
+    private final Runnable connectOffTheMainThread = new Runnable() {
+        @Override
+        public void run() {
+            communicator.connect();
+
+            handler.post(sendMqttMessage);
+        }
+    };
 
     private final Runnable sendMqttMessage = new Runnable() {
         private int i;

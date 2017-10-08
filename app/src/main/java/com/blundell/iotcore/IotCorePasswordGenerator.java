@@ -9,8 +9,8 @@ import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 
 import io.jsonwebtoken.JwtBuilder;
@@ -58,15 +58,14 @@ class IotCorePasswordGenerator {
     }
 
     private static String createPassword(String projectId, byte[] privateKeyBytes, String algorithmName, SignatureAlgorithm signatureAlgorithm) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         // Create a JWT to authenticate this device. The device will be disconnected after the token
         // expires, and will have to reconnect with a new token. The audience field should always be set
         // to the GCP project id.
-        Date issueDate = Date.from(now.minusDays(1).toInstant(ZoneOffset.MIN)); // TODO DATE HACK????
         JwtBuilder jwtBuilder =
                 Jwts.builder()
-                        .setIssuedAt(issueDate)
-                        .setExpiration(Date.from(now.plusMinutes(20).toInstant(ZoneOffset.MIN)))
+                        .setIssuedAt(Date.from(now))
+                        .setExpiration(Date.from(now.plus(Duration.ofMinutes(20))))
                         .setAudience(projectId);
 
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(privateKeyBytes);

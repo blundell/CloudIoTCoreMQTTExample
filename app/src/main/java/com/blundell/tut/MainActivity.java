@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Setup the communication with your Google IoT Core details
         communicator = new IotCoreCommunicator.Builder()
                 .withContext(this)
                 .withCloudRegion("your-region") // ex: europe-west1
@@ -30,7 +31,7 @@ public class MainActivity extends Activity {
         HandlerThread thread = new HandlerThread("MyBackgroundThread");
         thread.start();
         handler = new Handler(thread.getLooper());
-        handler.post(connectOffTheMainThread); // Using whatever threading mechanism you want
+        handler.post(connectOffTheMainThread); // Use whatever threading mechanism you want
     }
 
     private final Runnable connectOffTheMainThread = new Runnable() {
@@ -45,13 +46,18 @@ public class MainActivity extends Activity {
     private final Runnable sendMqttMessage = new Runnable() {
         private int i;
 
+        /**
+         * We post 100 messages as an example, 1 a second
+         */
         @Override
         public void run() {
             if (i == 100) {
                 return;
             }
 
+            // events is the default topic for MQTT communication
             String subtopic = "events";
+            // Your message you want to send
             String message = "Hello World " + i++;
             communicator.publishMessage(subtopic, message);
 

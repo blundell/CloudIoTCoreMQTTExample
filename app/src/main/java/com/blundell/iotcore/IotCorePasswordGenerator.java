@@ -2,7 +2,6 @@ package com.blundell.iotcore;
 
 import android.content.res.Resources;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,7 +63,6 @@ class IotCorePasswordGenerator {
         // expires, and will have to reconnect with a new token. The audience field should always be set
         // to the GCP project id.
         Date issueDate = Date.from(now.minusDays(1).toInstant(ZoneOffset.MIN)); // TODO DATE HACK????
-        Log.d("TUT", "JWT issue date: " + issueDate);
         JwtBuilder jwtBuilder =
                 Jwts.builder()
                         .setIssuedAt(issueDate)

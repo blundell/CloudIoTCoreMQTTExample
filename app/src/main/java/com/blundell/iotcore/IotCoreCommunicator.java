@@ -99,6 +99,7 @@ public class IotCoreCommunicator {
     public void connect() {
         monitorConnection();
         clientConnect();
+        subscribeToConfigChanges();
     }
 
     private void monitorConnection() {
@@ -111,13 +112,12 @@ public class IotCoreCommunicator {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Log.d("TUT", "message arrived " + topic + " MSG " + message);
-
+                // You need to do something with messages when they arrive
             }
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
                 Log.d("TUT", "delivery complete " + token);
-
             }
         });
     }
@@ -125,8 +125,8 @@ public class IotCoreCommunicator {
     private void clientConnect() {
         try {
             MqttConnectOptions connectOptions = new MqttConnectOptions();
-            // Note that the the Google Cloud IoT Core only supports MQTT 3.1.1, and Paho requires that we explictly set this.
-            // If you don't set MQTT version, the server will immediately close its connection to your device.
+            // Note that the the Google Cloud IoT Core only supports MQTT 3.1.1, and Paho requires that we explicitly set this.
+            // If you don't, the server will immediately close its connection to your device.
             connectOptions.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1_1);
 
             // With Google Cloud IoT Core, the username field is ignored, however it must be set for the
@@ -153,14 +153,25 @@ public class IotCoreCommunicator {
         }
     }
 
+    /**
+     * Configuration is managed and sent from the IoT Core Platform
+     */
+    private void subscribeToConfigChanges() {
+        try {
+            client.subscribe("/devices/" + deviceId + "/config", 1);
+        } catch (MqttException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     public void publishMessage(String subtopic, String message) {
         String topic = "/devices/" + deviceId + "/" + subtopic;
         String payload = "{msg:\"" + message + "\"}";
         MqttMessage mqttMessage = new MqttMessage(payload.getBytes());
         mqttMessage.setQos(1);
         try {
-            Log.d("TUT", "IoT Core message published. To topic: " + topic);
             client.publish(topic, mqttMessage);
+            Log.d("TUT", "IoT Core message published. To topic: " + topic);
         } catch (MqttException e) {
             throw new IllegalStateException(e);
         }
